@@ -18,7 +18,7 @@ int main ()
 {
 	FILE *readFile; //the file to be read
 	char line[100]; //used for input from the file
-	char *tokenizer; //tokenizer used for input 
+	char *tokenizer; //tokenizer used for input
 	int numVertex, numFaces, nPoints; //the numbers of vertices and faces
 	int *laplacian[2], *diagonal; //used for reading the laplacian
 	int *faceP; //used to read points in a face
@@ -38,12 +38,12 @@ int main ()
 	readFile = fopen ("a.txt","r"); //open the file for reading
 	if(readFile==NULL)
 			printf("Eroare la deschiderea fisierului");
-	
+
 	fgets(line, 100, readFile); //jump the first line (.OFF line)
-	
+
 	fgets(line, 100, readFile); //read the second line
 	tokenizer = strtok (line, " "); //read the number of vertices
-	numVertex=atoi(tokenizer); 
+	numVertex=atoi(tokenizer);
 
 	tokenizer = strtok (NULL," "); //read the number of faces
 	numFaces=atoi(tokenizer);
@@ -54,9 +54,9 @@ int main ()
 		//in case we want to compute the matrix using the distances between the vertices
 		/*
 		tokenizer = strtok (line, " "); //read the x coordinate
-		distanceV[i][0]=atoi(tokenizer); 
+		distanceV[i][0]=atoi(tokenizer);
 		tokenizer = strtok (NULL," "); //read the y coordinate
-		distanceV[i][1]=atoi(tokenizer); 
+		distanceV[i][1]=atoi(tokenizer);
 		tokenizer = strtok (NULL," "); //read the z coordinate
 		distanceV[i][2]=atoi(tokenizer); */
 	}
@@ -82,9 +82,9 @@ int main ()
 		fgets(line, 100, readFile);
 		tokenizer=strtok(line," ");
 		nPoints=atoi(tokenizer);  //we read the number of vertices that define the face
-		
+
 		faceP=new int[nPoints];   //initialize a vector that will keep the nPoints vertices
-		
+
 		//read the points in the faceP vector
 		for(int i=0; i<nPoints; i++)
 		{
@@ -118,7 +118,7 @@ int main ()
 			}
 		delete[] faceP;
 	}
-	
+
 	//tridiagonize the laplacian
 	//*********************************************//
 	//initializations
@@ -139,7 +139,7 @@ int main ()
 	}
 	v[0]=1;
 	beta=0;
-	
+
 	for(int k=0; k<numVertex; k++)
 	{
 		for(int i=0; i<numVertex; i++)
@@ -167,14 +167,14 @@ int main ()
 		}
 	}
 
-	
+
 	//use the function to compute the eigenvalues
 	//*********************************************//
 	eigenValues.setlength(numVertex);
 	for(int i=0; i<numVertex; i++)
 		eigenValues[i]=lapDiagonal[i]; ///actually they are swapped
 	smatrixtdevd(lapDiagonal,lapSubDiagonal,numVertex,0,some);
-	
+
 	//compute the eigenvectors and calculate the coresponding heat kernel
 	//*********************************************//
 	eigenVector.setlength(numVertex);
@@ -230,8 +230,8 @@ int main ()
 			eigenVector[0]=1;
 			eigenVector[1]=((lapDiagonal[j]-eigenValues[0])*eigenVector[0])/lapSubDiagonal[0];
 			for(int i=2; i<numVertex; i++)
-				eigenVector[i]=(-lapSubDiagonal[i-2]*eigenVector[i-2]+eigenVector[i-1]*(lapDiagonal[j]-eigenValues[i-1]))/lapSubDiagonal[i-1];	
-			
+				eigenVector[i]=(-lapSubDiagonal[i-2]*eigenVector[i-2]+eigenVector[i-1]*(lapDiagonal[j]-eigenValues[i-1]))/lapSubDiagonal[i-1];
+
 			w[0]+=eigenVector[0]*eigenVector[0]*pow(2.71828,-lapDiagonal[j]*t);
 			for(int i=1; i<numVertex; i++)
 				w[i]+=eigenVector[i]*eigenVector[i]*pow(2.71828,-lapDiagonal[j]*t);
@@ -244,7 +244,7 @@ int main ()
 			hks[k]+=w[i]/eSum;
 	}
 
-	
+
 
 	for(int k=0; k<100; k++)
 		cout<<hks[k]<<" ";
