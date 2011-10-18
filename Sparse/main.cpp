@@ -1,11 +1,15 @@
+#include "os.h"
 #include <stdio.h>
 #include <iostream>
-#include <windows.h>
 #include <fstream>
 #include <string>
 #include <cstdlib>
 #include <math.h>
 #include "linalg.h"
+
+#ifdef WINDOWS_OS
+#include <windows.h>
+#endif
 
 using namespace std;
 using namespace alglib;
