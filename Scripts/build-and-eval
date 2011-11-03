@@ -1,0 +1,23 @@
+#!/bin/bash
+
+source Scripts/functions.sh
+
+ci=$(git-short-commit)
+
+echo "--------------------------------------------------------------------------------"
+echo "Building $ci"
+echo "--------------------------------------------------------------------------------"
+
+pushd Sparse >/dev/null || die failed to cd
+make clean
+make VERSIONFLAGS=-DGIT_COMMIT=\\\"$ci\\\" || die make failed
+popd >/dev/null
+
+echo "--------------------------------------------------------------------------------"
+echo "Running. This will take some time..."
+echo "--------------------------------------------------------------------------------"
+
+test -e Data/0005.view.1.off || die unzip shrec in Data
+pushd Data >/dev/null
+nice -n 10 make -j12 VERSION=$ci
+popd >/dev/null

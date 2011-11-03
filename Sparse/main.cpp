@@ -34,6 +34,7 @@ int main (int argc, char **argv)
 
 	char fileName[100];
 	char fullPath[150];
+        const char *outPath = NULL;
 #ifdef WINDOWS_OS
 	cin>>fileName;
 	strcpy (fullPath,"c:\\test\\");
@@ -47,6 +48,8 @@ int main (int argc, char **argv)
         else {
           strcpy(fullPath, argv[1]);
           strcpy(fileName, argv[1]);
+          if (argc >= 3)
+            outPath = argv[2];
         }
 #endif
 
@@ -213,8 +216,16 @@ int main (int argc, char **argv)
 	strcat (fullPath, fileName);
 	strcat (fullPath, ".txt");
 #else
+        if (outPath) {
+          strcpy (fullPath, outPath);
+          strcpy (fullPath, "/");
+        }
         strcpy (fullPath, fileName);
         strcat (fullPath, ".signature");
+#ifdef GIT_COMMIT
+        strcat (fullPath, ".");
+        strcat (fullPath, GIT_COMMIT);
+#endif
 #endif
 	writeFile = fopen (fullPath, "w"); //open the file for writing
 	if(writeFile==NULL)

@@ -1,0 +1,19 @@
+#!/bin/bash
+
+source Scripts/functions.sh
+
+function git-check-loop {
+    old_head="somevaluethatsnotacommit"
+    while true
+    do
+        git pull
+        head=$(git-short-commit)
+        if test "$head" '!=' "$old_head"
+        then Scripts/build-and-eval
+        fi
+        old_head=$head
+        sleep 10;
+    done
+}
+
+git-check-loop
