@@ -11,7 +11,7 @@
 #
 # Debuging
   DEBUG = -Wall
-  OPT = -O3 -DBLAS -ggdb
+  OPT = -O3 -DBLAS -ggdb -I../INC
 #
 # Make command
   MAKE = make
@@ -22,20 +22,20 @@
   NUTRLAN = $(TOP)/libnutrlan.a
 #
 # External directories
-  DIR_CLAPACK = 
+  DIR_CLAPACK =
 #
 # External libraries
   LIB_DIR =
   MATH    =
   BLAS    = -lblas
   LAPACK  = -llapack
-  CLAPACK = 
-  F2C     = 
+  CLAPACK =
+  F2C     =
   LIB     = $(LIB_DIR) $(LAPACK) $(BLAS) $(CLAPACK) $(F2C) $(MATH) -lpthread
-  PLIB    = $(LIB) -lmpi 
+  PLIB    = $(LIB) -lmpi
 #
 # Include files
-  INC_CLAPACK = 
+  INC_CLAPACK =
   INC_NUTRLAN  = -I$(TOP)/INC
   INC         = $(INC_CLAPACK) $(INC_NUTRLAN)
 #
