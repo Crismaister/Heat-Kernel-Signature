@@ -302,7 +302,6 @@ int main (int argc, char **argv)
 
 	//HeatKernelSignature variables
         real_1d_array w; //eigenvalues vector
-	double eSum=0; //will hold e^(-t*eigenValue)
 	double tmin, tmax, step, t; //time variables
 	double HKS[100];
 
@@ -323,29 +322,32 @@ int main (int argc, char **argv)
 	for(int i=0; i<numVertex; i++)
         cout<<eigenValues[i]<<"\n"; */
 
-
-	//compute the eigenvectors and calculate the coresponding heat kernel
-
-
 	//initialize time variables
 	tmin=4*log(10.0)/fabs(EValue(numEigen-1));
 	tmax=4*log(10.0)/fabs(EValue(0));
 	step=(log(tmax)-log(tmin))/100;
 
+        cerr << "ehead: " << EValue(0) << endl;
+        cerr << "etail: " << EValue(numEigen-1) << endl;
+        cerr << "tmin: " << tmin << endl;
+        cerr << "tmax: " << tmax << endl;
+        cerr << "step: " << step << endl;
+        float ht[100];
+
 	//compute the HKS for 100 t's
 	for(int k=0; k<100; k++)
 	{
 		//compute the t
-		t=tmin+exp(k*step);
+		t=tmin*exp(k*step);
 
 		for(int i=0; i<numEigen; i++)
 			w[i]=0;
-#ifdef USE_ESUM
-		eSum=0;
+
+		float heatTrace=0;
 		//e^(-t*eigenValue)
                 for (int i = 0; i < numEigen; i++)
-                  eSum+=fabs(pow(2.71828,-EValue(i)*t));
-#endif
+                  heatTrace+=exp(-EValue(i)*t);
+                ht[k] = heatTrace;
 
 		//in w we store each heatKernel for each vertex
                 /*for (int j = 0; j < 100; j++)
@@ -353,11 +355,11 @@ int main (int argc, char **argv)
                   w[i]+=EVector(j, i)*EVector(j, i)*pow(2.71828,-EValue(j)*t);*/
                 for (int i = 0; i < numEigen; i++)
                   for (int j = 0; j < numVertex; j++)
-                    w[i] += exp(-EValue(i)*t) * EVector(i,j)*EVector(i,j);
+                    w[j] += exp(-EValue(i)*t) * EVector(i,j)*EVector(i,j);
 
 		//compute the heat kernel signature for each time t
                 for(int i=0; i<numVertex; i++)
-			HKS[k]+=w[i];//eSum;
+                  HKS[k]+=w[i] * heatTrace;
 	}
 
 	FILE *writeFile; //the file to be read
@@ -383,7 +385,7 @@ int main (int argc, char **argv)
 			printf("Error opening the file");
 
 	for(int i=0; i<100; i++)
-		fprintf(writeFile,"%g\n", HKS[i]);
+          fprintf(writeFile,"%g\n", HKS[i]);
 
 	fclose(writeFile);
 
