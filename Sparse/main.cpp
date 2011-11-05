@@ -6,7 +6,6 @@
 #include <cstdlib>
 #include <cassert>
 #include <math.h>
-#include "linalg.h"
 
 #include <vector>
 
@@ -25,7 +24,7 @@ extern "C" {
 #endif
 
 using namespace std;
-using namespace alglib;
+//using namespace alglib;
 
 #define TARGET_NUMEIGEN 300
 
@@ -301,26 +300,14 @@ int main (int argc, char **argv)
         cerr << "Number of eigenValues determined: " << numEigen << endl;
 
 	//HeatKernelSignature variables
-        real_1d_array w; //eigenvalues vector
+        vector<double> w;
 	double tmin, tmax, step, t; //time variables
 	double HKS[100];
 
 	for(int i=0; i<100; i++)
 		HKS[i]=0;
 
-	w.setlength(numVertex);
-	//for(int i=0; i<numVertex; i++)
-	//	eigenValues[i]=0;
-
-	//eigenVector.setlength(numVertex,numVertex);
-
-
-	cout<<"\n";
-
-	/*smatrixevd(matrix, numVertex, 1, false, eigenValues, eigenVector);
-
-	for(int i=0; i<numVertex; i++)
-        cout<<eigenValues[i]<<"\n"; */
+	w.resize(numVertex);
 
 	//initialize time variables
 	tmin=4*log(10.0)/fabs(EValue(numEigen-1));
